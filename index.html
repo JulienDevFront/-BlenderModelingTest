@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PorteFolio</title>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+            background-color: #000000; /* Fond noir pour une ambiance tamisée */
+        }
+    </style>
+</head>
+<body>
+    <main></main>
+    <canvas id="renderCanvas"></canvas>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+        var engine = new BABYLON.Engine(canvas, true);
+    
+        var createScene = function () {
+            var scene = new BABYLON.Scene(engine);
+            scene.clearColor = new BABYLON.Color3(0.2, 0.2, 0.2); // Fond légèrement gris pour une ambiance chaude
+    
+            var camera = new BABYLON.ArcRotateCamera("camera", 3.0, 1.2, 15, new BABYLON.Vector3(0, 0, 0), scene);
+            camera.attachControl(canvas, true);
+    
+            // Créez plusieurs lumières bleues de différentes intensités et positions
+            var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 10, 0), scene);
+            light1.intensity = 0; // Intensité de la première lumière bleue
+    
+            var light2 = new BABYLON.HemisphericLight("light2", new BABYLON.Vector3(10, 0, 0), scene);
+            light2.intensity = 0; // Intensité de la deuxième lumière bleue
+    
+            var light3 = new BABYLON.HemisphericLight("light3", new BABYLON.Vector3(0, 0, 10), scene);
+            light3.intensity = 1; // Intensité de la troisième lumière bleue
+    
+            var loader = new BABYLON.AssetsManager(scene);
+            var glbLoader = loader.addMeshTask("glbLoader", "", "./modelPorteFolio.glb");
+            
+            glbLoader.onSuccess = function (task) {
+                // Le modèle est chargé avec succès
+                var mesh = task.loadedMeshes[0];
+    
+                // Vous pouvez appliquer des transformations au modèle ici si nécessaire
+                // Déplacez le modèle vers le bas à droite
+                mesh.position = new BABYLON.Vector3(10, -8, 2);
+            };
+    
+            loader.load();
+    
+            return scene;
+        };
+    
+        var scene = createScene();
+    
+        // Redimensionnez le canvas en fonction de la fenêtre
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
+    </script>
+    
+</body>
+</html>
